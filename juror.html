@@ -7,7 +7,44 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <style>
 body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
 </style>
+
+
 <body class="w3-light-grey">
 
 <!-- w3-content defines a container for fixed size centered content, 
@@ -19,30 +56,62 @@ and is wrapped around the whole page content, except for the footer in this exam
 <div class="w3-row">
 
 <!-- Rule Overview -->
-<div class="w3-col">
+<div class="w3-col l9">
     <!-- Header -->
     <header class="w3-container w3-center w3-padding-32"> 
-        <h1><b>Inverse Pictionary</b></h1>
+        <h1><b>Inverse Pictionary - Juror</b></h1>
         <p>Welcome to <span class="w3-tag">...</span></p>
     </header>
 
     <!-- Requirements -->
     <div class="w3-card w3-margin w3-margin-top">
       <div class="w3-container w3-white">
-        <h4><b>Game Overwiew</b></h4>
+        <h4><b>Rule Overwiew</b></h4>
         <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
         <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
             tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
             tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
             tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
             tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>    
-            
-        <p><button class="w3-button w3-padding-large w3-white w3-border" ><a href="writer.html"><b>Describe</b></a></button><button class="w3-button w3-padding-large w3-white w3-border"><a href="drawer.html"><b>Draw</b></a></button><button class="w3-button w3-padding-large w3-white w3-border"><a href="juror.html"><b>Judge</b></a></button></p>
-
       </div>
     </div><hr>
-
+  
 <!-- END Introduction Menu -->
+</div>
+
+<script>
+    var animal_name = "Tiger";
+
+    window.onload = function() {
+       //when the document is finished loading, replace everything
+       //between the <a ...> </a> tags with the value of splitText
+   document.getElementById("animal_name").innerHTML=animal_name;
+} 
+
+</script>
+
+<!-- Blog entries -->
+<div class="w3-col l3 s12">
+  <!-- Image Description Box -->
+  <div class="w3-card-4 w3-margin w3-white">
+    <img src="tiger.jpeg" alt="Animal" style="width:100%">
+    <img src="tiger_drawing.png" alt="Animal" style="width:100%">
+    <div class="w3-container">
+        <h6><b><a id="animal_name"></a></b> - Rate the drawing (1-5):</h6>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="score">
+        </div>
+
+        <div class="w3-col m8 s12">
+            <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="jurortext.html"><b>Submit »</b></a></button></p>
+            </div>
+            <div class="w3-col m4 w3-hide-small">
+            <p><span class="w3-right"><b>Rating  </b> <span class="w3-tag">0</span></span></p>
+        </div>
+    </div>
+    </div>
+  <hr>
+<!-- END BLOG ENTRIES -->
 </div>
 
 <!-- END GRID -->

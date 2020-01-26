@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<title>Inverse Pictionary</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+<body class="w3-light-grey">
+
+<!-- w3-content defines a container for fixed size centered content, 
+and is wrapped around the whole page content, except for the footer in this example -->
+<div class="w3-content" style="max-width:1400px">
+
+    
+<!-- Grid -->
+<div class="w3-row">
+
+<!-- Rule Overview -->
+<div class="w3-col l8">
+    <!-- Header -->
+    <header class="w3-container w3-center w3-padding-32"> 
+        <h1><b>Inverse Pictionary - Drawer</b></h1>
+        <p>Welcome to <span class="w3-tag">...</span></p>
+    </header>
+
+    <!-- Requirements -->
+    <div class="w3-card w3-margin w3-margin-top">
+      <div class="w3-container w3-white">
+        <h4><b>Rule Overwiew</b></h4>
+        <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
+        <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
+            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
+            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
+            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
+            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>    
+      </div>
+    </div><hr>
+  
+<!-- END Introduction Menu -->
+</div>
+
+<script>
+    var text_description = "text description ... Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sedtellus ut rutrum.";
+
+    window.onload = function() {
+       //when the document is finished loading, replace everything
+       //between the <a ...> </a> tags with the value of splitText
+   document.getElementById("text_description ").innerHTML=text_description ;
+} 
+</script>
+
+<!-- Blog entries -->
+<div class="w3-col l4 s12">
+  <!-- Image Description Box -->
+  <div class="w3-card-4 w3-margin w3-white">
+    <div class="w3-container">
+        <h3><b>Description</b></h3>
+        <p><a id="text_description "></a></p>
+        <h5>Draw the description in the <span class="w3-opacity">canvas</span> bellow</h5>
+    
+
+        <div class="w3-container">
+            <div id="paint" style="height:300px;">
+                <canvas id="myCanvas"></canvas>
+            </div>
+
+            <script>
+                var canvas = document.getElementById('myCanvas');
+                var ctx = canvas.getContext('2d');
+                
+                var painting = document.getElementById('paint');
+                var paint_style = getComputedStyle(painting);
+                canvas.width = parseInt(paint_style.getPropertyValue('width'));
+                canvas.height = parseInt(paint_style.getPropertyValue('height'));
+                
+                var mouse = {x: 0, y: 0};
+                
+                canvas.addEventListener('mousemove', function(e) {
+                    mouse.x = e.pageX - this.offsetLeft;
+                    mouse.y = e.pageY - this.offsetTop;
+                }, false);
+                
+                ctx.lineWidth = 3;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#000000';
+                
+                canvas.addEventListener('mousedown', function(e) {
+                    ctx.beginPath();
+                    ctx.moveTo(mouse.x, mouse.y);
+                
+                    canvas.addEventListener('mousemove', onPaint, false);
+                }, false);
+                
+                canvas.addEventListener('mouseup', function() {
+                    canvas.removeEventListener('mousemove', onPaint, false);
+                }, false);
+                
+                var onPaint = function() {
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                };
+          </script>
+            
+        </div>
+        </div>
+    </div>
+  </div>
+  <hr>
+<!-- END BLOG ENTRIES -->
+</div>
+
+<!-- END GRID -->
+</div><br>
+
+<!-- END w3-content -->
+</div>
+
+
+
+<!-- Footer -->
+<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>
