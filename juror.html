@@ -44,6 +44,125 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 </style>
 
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBHChQmjKz49_YfQ1P8L9G2BJaBQ98AGpY",
+    authDomain: "inversepictionary.firebaseapp.com",
+    databaseURL: "https://inversepictionary.firebaseio.com",
+    projectId: "inversepictionary",
+    storageBucket: "inversepictionary.appspot.com",
+    messagingSenderId: "1019811222453",
+    appId: "1:1019811222453:web:ddad05cd4d72b5a1673ffc",
+    measurementId: "G-LDQH297677"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  var db = firebase.database();
+
+  function sendDrawing(raw_image, description, user_ID, writer_link) {
+    data = firebase.database().ref('Drawings/').push({
+      "raw_image": raw_image,
+      "description": description,
+      "user_ID": user_ID,
+      "score_list": {0:0},
+      "writer_link": writer_link
+    });
+
+    return data.key
+  }
+
+  function updateScores(tag_drawing, tag_description, score) {
+    ref = firebase.database().ref('Drawings/' + tag_drawing)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Drawings/' + tag_drawing + '/score_list/' + next.toString()).set(score)
+    });
+    
+    ref = firebase.database().ref('Descriptions/' + tag_description)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Descriptions/' + tag_description + '/score_list/' + next.toString()).set(score)
+    });
+  }
+
+  function updateImageIncrement(tag, index) {
+    ref = firebase.database().ref('Images/' + tag)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()[index] + 1
+      firebase.database().ref('Images/' + tag + "/" + index).set(next)
+    });
+  }
+
+  function updateDrawingList(description_id, tag) {
+    ref = firebase.database().ref('Descriptions/' + description_id)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["drawer_list"].length
+      firebase.database().ref('Descriptions/' + description_id + "/drawer_list/" + next).set(tag)
+    });
+  }
+
+  async function getRandDescription(){
+
+    ref = firebase.database().ref('Descriptions/')
+    const snapshot =  await ref.once('value');
+    var obj = snapshot.val()
+    var keys   = Object.keys(obj);
+    var lowest = Math.min.apply(null, keys.map(function(x) { return obj[x]["drawer_list"].length} ));
+    var match  = keys.filter(function(y) { return obj[y]["drawer_list"].length === lowest });
+    console.log(match)
+    rand_description = match[Math.floor(Math.random()*match.length)]
+    const snapshot2 =  await firebase.database().ref('Descriptions/' + rand_description).once('value');
+    description_text = snapshot2.val()["description"]
+    image_id = snapshot2.val()["image_ID"]
+
+    return {"id": rand_description, "text": description_text, "image_id": image_id}
+  }
+
+  // Getting random image
+  window.onload = async function() {
+    const desc_info = await getRandDescription()
+    console.log(desc_info)
+
+    //when the document is finished loading, replace everything
+    //between the <a ...> </a> tags with the value of splitText
+    document.getElementById("description_text").innerHTML=desc_info["text"];
+    document.getElementById("description_id").innerHTML=desc_info["id"];
+    document.getElementById("image_id").innerHTML=desc_info["image_id"];
+  }
+
+  user_ID = "ME"
+
+  function isCanvasBlank(canvas) {
+        return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
+    }
+
+  function submit(){
+    // Check if drawing isn't empty
+    canvas = document.getElementById('myCanvas')
+    if(isCanvasBlank(canvas)){
+        window.alert("Canvas cannot be blank");
+    }
+    else{
+        tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, user_ID, document.getElementById("description_id").innerHTML)
+        updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
+        updateDrawingList(document.getElementById("description_id").innerHTML, tag)
+        window.alert("Drawing successfully uploaded");
+        location.reload();
+    }
+  }
+
+</script>
+
 
 <body class="w3-light-grey">
 

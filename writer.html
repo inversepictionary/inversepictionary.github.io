@@ -8,6 +8,125 @@
 <style>
 body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBHChQmjKz49_YfQ1P8L9G2BJaBQ98AGpY",
+    authDomain: "inversepictionary.firebaseapp.com",
+    databaseURL: "https://inversepictionary.firebaseio.com",
+    projectId: "inversepictionary",
+    storageBucket: "inversepictionary.appspot.com",
+    messagingSenderId: "1019811222453",
+    appId: "1:1019811222453:web:ddad05cd4d72b5a1673ffc",
+    measurementId: "G-LDQH297677"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  var db = firebase.database();
+
+  function sendDescription(image_ID, description, user_ID) {
+    data = firebase.database().ref('Descriptions/').push({
+      "image_ID": image_ID,
+      "description": description,
+      "user_ID": user_ID,
+      "score_list": {0:0},
+      "drawer_list": {0:0}
+    });
+
+    return data.key
+  }
+
+  function updateScores(tag_drawing, tag_description, score) {
+    ref = firebase.database().ref('Descriptions/' + tag_drawing)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Descriptions/' + tag_drawing + '/score_list/' + next.toString()).set(score)
+    });
+    
+    ref = firebase.database().ref('Descriptions/' + tag_description)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Descriptions/' + tag_description + '/score_list/' + next.toString()).set(score)
+    });
+  }
+
+  function updateImageIncrement(tag, index) {
+    ref = firebase.database().ref('Images/' + tag)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()[index] + 1
+      firebase.database().ref('Images/' + tag + "/" + index).set(next)
+    });
+  }
+
+  async function getRandImage(){
+
+    ref = firebase.database().ref('Images/')
+    const snapshot =  await ref.once('value');
+    var obj = snapshot.val()
+    var keys   = Object.keys(obj);
+    var lowest = Math.min.apply(null, keys.map(function(x) { return obj[x]["description_count"]} ));
+    var match  = keys.filter(function(y) { return obj[y]["description_count"] === lowest });
+
+    rand_image = match[Math.floor(Math.random()*match.length)]
+    const snapshot2 =  await firebase.database().ref('Images/' + rand_image).once('value');
+    name = snapshot2.val()["animal_name"]
+    link = snapshot2.val()["link"]
+
+    return {"id": rand_image, "name": name, "link": link}
+  }
+
+  // Getting random image
+  window.onload = async function() {
+    const image_info = await getRandImage()
+    console.log(image_info)
+
+    //when the document is finished loading, replace everything
+    //between the <a ...> </a> tags with the value of splitText
+    document.getElementById("animal_id").innerHTML=image_info["id"];
+    document.getElementById("animal_name").innerHTML=image_info["name"];
+    document.getElementById("animal_image").src=image_info["link"];
+    document.getElementById("word_count").innerHTML = 3;
+  }
+
+  // Updating word count
+  function countWords(){
+    s = document.getElementById("text_content").value;
+    s = s.replace(/(^\s*)|(\s*$)/gi,"");
+    s = s.replace(/[ ]{2,}/gi," ");
+    s = s.replace(/\n /,"\n");
+    document.getElementById("word_count").innerHTML = s.split(' ').length;
+  }
+
+  user_ID = "ME"
+
+  function submit(){
+    max_words = 50
+    min_words = 25
+    wc = parseInt(document.getElementById("word_count").innerHTML)
+    if(wc < min_words ||  wc > max_words){
+      window.alert("Word Count should be between " + min_words + "-" + max_words + " words");
+    }
+    else{
+      tag = document.getElementById("animal_id").innerHTML
+      sendDescription(tag, document.getElementById("text_content").value, user_ID)
+      updateImageIncrement(tag, "description_count")
+      window.alert("Description successfully uploaded");
+      location.reload();
+    }
+  }
+
+</script>
+
 <body class="w3-light-grey">
 
 <!-- w3-content defines a container for fixed size centered content, 
@@ -23,7 +142,7 @@ and is wrapped around the whole page content, except for the footer in this exam
     <!-- Header -->
     <header class="w3-container w3-center w3-padding-32"> 
         <h1><b>Inverse Pictionary - Writer</b></h1>
-        <p>Welcome to <span class="w3-tag">...</span></p>
+        <p>Welcome to <span class="w3-tag">Version 1.0.0</span></p>
     </header>
 
     <!-- Requirements -->
@@ -31,50 +150,36 @@ and is wrapped around the whole page content, except for the footer in this exam
       <div class="w3-container w3-white">
         <h4><b>Rule Overwiew</b></h4>
         <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
-        <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>    
+        <p>The object is simple, describe the generated animal image. Refrain from using any descriptive features not explicitly seen in the image. Also your description should not contain any other animal names. You will be evaluated on how accurately people can draw the image based on your description. Failure to follow the previously mentioned rules will lead to disqualification. Have fun and Good Luck! </p>    
       </div>
     </div><hr>
   
 <!-- END Introduction Menu -->
 </div>
 
-<script>
-    var animal_name = "Tiger";
-
-    window.onload = function() {
-       //when the document is finished loading, replace everything
-       //between the <a ...> </a> tags with the value of splitText
-   document.getElementById("animal_name").innerHTML=animal_name;
-} 
-</script>
-
 <!-- Blog entries -->
 <div class="w3-col l4 s12">
   <!-- Image Description Box -->
   <div class="w3-card-4 w3-margin w3-white">
-    <img src="tiger.jpeg" alt="Animal" style="width:100%">
+    <img id="animal_image" alt="Animal" style="width:100%">
     <div class="w3-container">
-        <h3><b><a id="animal_name"></a></b></h3>
+        <h3><b><a id="animal_name"></a> - ID: <a id="animal_id"></a></b></h3>
         <h5>Write your description in the <span class="w3-opacity">textbox</span> bellow</h5>
     
 
         <div class="w3-container">
             <br>
             <center>
-            <textarea rows="6" cols="43" name="comment" form="usrform"> Enter text here...</textarea>
+            <textarea id="text_content" rows="6" cols="43" name="comment" form="usrform" onkeyup="countWords();"> Enter text here...</textarea>
             </center>
             <p><b>Note:</b> The form attribute is not supported in IE.</p>
             
             <div class="w3-row">
             <div class="w3-col m8 s12">
-            <p><button class="w3-button w3-padding-large w3-white w3-border"><b>Submit »</b></button></p>
+            <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="submit();"><b>Submit »</b></button></p>
             </div>
             <div class="w3-col m4 w3-hide-small">
-            <p><span class="w3-right"><b>Word Count  </b> <span class="w3-tag">0</span></span></p>
+            <p><span class="w3-right"><b>Word Count  </b> <span class="w3-tag"><a id="word_count"></a></span></span></p>
             </div>
         </div>
         </div>

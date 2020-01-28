@@ -8,6 +8,22 @@
 <style>
 body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+
+<script>
+
+  function onclickJuror() {
+    window.alert("Judging is not available at this time");
+  }
+
+  function onclickDescribe() {
+    window.location.href = "writer.html";
+  }
+
+  function onclickDraw() {
+    window.location.href = "drawer.html";
+  }
+</script>
+
 <body class="w3-light-grey">
 
 <!-- w3-content defines a container for fixed size centered content, 
@@ -23,7 +39,7 @@ and is wrapped around the whole page content, except for the footer in this exam
     <!-- Header -->
     <header class="w3-container w3-center w3-padding-32"> 
         <h1><b>Inverse Pictionary</b></h1>
-        <p>Welcome to <span class="w3-tag">...</span></p>
+        <p>Welcome to <span class="w3-tag">Version 1.0.0</span></p>
     </header>
 
     <!-- Requirements -->
@@ -37,7 +53,7 @@ and is wrapped around the whole page content, except for the footer in this exam
             tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
             tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>    
             
-        <p><button class="w3-button w3-padding-large w3-white w3-border" ><a href="writer.html"><b>Describe</b></a></button><button class="w3-button w3-padding-large w3-white w3-border"><a href="drawer.html"><b>Draw</b></a></button><button class="w3-button w3-padding-large w3-white w3-border"><a href="juror.html"><b>Judge</b></a></button></p>
+        <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="onclickDescribe();"><b>Describe</b></button><button class="w3-button w3-padding-large w3-white w3-border" onclick="onclickDraw();"><b>Draw</b></button><button class="w3-button w3-padding-large w3-white w3-border" onclick="onclickJuror();"><b>Judge</b></button></p>
 
       </div>
     </div><hr>
