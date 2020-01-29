@@ -69,18 +69,6 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
   var db = firebase.database();
 
-  function sendDrawing(raw_image, description, user_ID, writer_link) {
-    data = firebase.database().ref('Drawings/').push({
-      "raw_image": raw_image,
-      "description": description,
-      "user_ID": user_ID,
-      "score_list": {0:0},
-      "writer_link": writer_link
-    });
-
-    return data.key
-  }
-
   function updateScores(tag_drawing, tag_description, score) {
     ref = firebase.database().ref('Drawings/' + tag_drawing)
     ref.once("value", function(snapshot) {
@@ -95,69 +83,53 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     });
   }
 
-  function updateImageIncrement(tag, index) {
-    ref = firebase.database().ref('Images/' + tag)
-    ref.once("value", function(snapshot) {
-      next = snapshot.val()[index] + 1
-      firebase.database().ref('Images/' + tag + "/" + index).set(next)
-    });
-  }
+  async function getRandDrawing(){
 
-  function updateDrawingList(description_id, tag) {
-    ref = firebase.database().ref('Descriptions/' + description_id)
-    ref.once("value", function(snapshot) {
-      next = snapshot.val()["drawer_list"].length
-      firebase.database().ref('Descriptions/' + description_id + "/drawer_list/" + next).set(tag)
-    });
-  }
-
-  async function getRandDescription(){
-
-    ref = firebase.database().ref('Descriptions/')
+    ref = firebase.database().ref('Drawings/')
     const snapshot =  await ref.once('value');
     var obj = snapshot.val()
     var keys   = Object.keys(obj);
-    var lowest = Math.min.apply(null, keys.map(function(x) { return obj[x]["drawer_list"].length} ));
-    var match  = keys.filter(function(y) { return obj[y]["drawer_list"].length === lowest });
+    var lowest = Math.min.apply(null, keys.map(function(x) { return obj[x]["score_list"].length} ));
+    var match  = keys.filter(function(y) { return obj[y]["score_list"].length === lowest });
     console.log(match)
-    rand_description = match[Math.floor(Math.random()*match.length)]
-    const snapshot2 =  await firebase.database().ref('Descriptions/' + rand_description).once('value');
-    description_text = snapshot2.val()["description"]
-    image_id = snapshot2.val()["image_ID"]
+    rand_drawing = match[Math.floor(Math.random()*match.length)]
+    const snapshot2 =  await firebase.database().ref('Drawings/' + rand_drawing).once('value');
+    raw_drawing = snapshot2.val()["raw_image"]
+    writer_link = snapshot2.val()["writer_link"]
+    const snapshot3 =  await firebase.database().ref('Descriptions/' + writer_link).once('value');
+    image_id = snapshot3.val()["image_ID"]
+    const snapshot4 =  await firebase.database().ref('Images/' + image_id).once('value');
+    image_link = snapshot4.val()["link"]
+    animal_name = snapshot4.val()["animal_name"]
 
-    return {"id": rand_description, "text": description_text, "image_id": image_id}
+    return {"drawer_id": rand_drawing, "raw_drawing": raw_drawing, "writer_id": writer_link, "image_link": image_link, "animal_name": animal_name}
   }
 
   // Getting random image
   window.onload = async function() {
-    const desc_info = await getRandDescription()
-    console.log(desc_info)
+    const drawing_info = await getRandDrawing()
+    console.log(drawing_info)
 
     //when the document is finished loading, replace everything
     //between the <a ...> </a> tags with the value of splitText
-    document.getElementById("description_text").innerHTML=desc_info["text"];
-    document.getElementById("description_id").innerHTML=desc_info["id"];
-    document.getElementById("image_id").innerHTML=desc_info["image_id"];
+    document.getElementById("drawer_id").innerHTML=drawing_info["drawer_id"];
+    document.getElementById("writer_id").innerHTML=drawing_info["writer_id"];
+    document.getElementById("animal_name").innerHTML=drawing_info["animal_name"];
+    document.getElementById("animal_drawing").src=drawing_info["raw_drawing"];
+    document.getElementById("animal_image").src=drawing_info["image_link"];
   }
-
-  user_ID = "ME"
-
-  function isCanvasBlank(canvas) {
-        return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
-    }
 
   function submit(){
     // Check if drawing isn't empty
-    canvas = document.getElementById('myCanvas')
-    if(isCanvasBlank(canvas)){
-        window.alert("Canvas cannot be blank");
+    rating = document.getElementById("rating_count").innerHTML
+    console.log(rating)
+    if(rating == 0){
+        window.alert("Rate the drawing.");
     }
     else{
-        tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, user_ID, document.getElementById("description_id").innerHTML)
-        updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
-        updateDrawingList(document.getElementById("description_id").innerHTML, tag)
-        window.alert("Drawing successfully uploaded");
-        location.reload();
+        wid = document.getElementById("writer_id").innerHTML
+        did = document.getElementById("drawer_id").innerHTML
+        window.location.href = "jurortext.html?writer_id=" + wid + "&drawer_id=" + did + "&rating=" + rating
     }
   }
 
@@ -198,23 +170,12 @@ and is wrapped around the whole page content, except for the footer in this exam
 <!-- END Introduction Menu -->
 </div>
 
-<script>
-    var animal_name = "Tiger";
-
-    window.onload = function() {
-       //when the document is finished loading, replace everything
-       //between the <a ...> </a> tags with the value of splitText
-   document.getElementById("animal_name").innerHTML=animal_name;
-} 
-
-</script>
-
 <!-- Blog entries -->
 <div class="w3-col l3 s12">
   <!-- Image Description Box -->
   <div class="w3-card-4 w3-margin w3-white">
-    <img src="tiger.jpeg" alt="Animal" style="width:100%">
-    <img src="tiger_drawing.png" alt="Animal" style="width:100%">
+    <img id="animal_image" alt="Animal" style="width:100%">
+    <img id="animal_drawing" alt="Animal" style="width:100%">
     <div class="w3-container">
         <h6><b><a id="animal_name"></a></b> - Rate the drawing (1-5):</h6>
         <div class="slidecontainer">
@@ -222,16 +183,31 @@ and is wrapped around the whole page content, except for the footer in this exam
         </div>
 
         <div class="w3-col m8 s12">
-            <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="jurortext.html"><b>Submit »</b></a></button></p>
+            <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="submit();"><b>Submit »</b></button></p>
             </div>
             <div class="w3-col m4 w3-hide-small">
-            <p><span class="w3-right"><b>Rating  </b> <span class="w3-tag">0</span></span></p>
+            <p><span class="w3-right"><b>Rating  </b> <span class="w3-tag"><a id="rating_count"></a></span></span></p>
+            <a id="writer_id" style="display:none;"></a>
+            <a id="drawer_id" style="display:none;"></a>
         </div>
     </div>
     </div>
   <hr>
 <!-- END BLOG ENTRIES -->
 </div>
+
+<script>
+// Updating rating
+  var slider = document.getElementById("score");
+  var output = document.getElementById("rating_count");
+  output.innerHTML = 0;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  }
+  user_ID = "ME"
+</script>
+
 
 <!-- END GRID -->
 </div><br>

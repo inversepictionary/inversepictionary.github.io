@@ -8,6 +8,102 @@
 <style>
 body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBHChQmjKz49_YfQ1P8L9G2BJaBQ98AGpY",
+    authDomain: "inversepictionary.firebaseapp.com",
+    databaseURL: "https://inversepictionary.firebaseio.com",
+    projectId: "inversepictionary",
+    storageBucket: "inversepictionary.appspot.com",
+    messagingSenderId: "1019811222453",
+    appId: "1:1019811222453:web:ddad05cd4d72b5a1673ffc",
+    measurementId: "G-LDQH297677"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  var db = firebase.database();
+
+  function updateScores(tag_drawing, tag_description, score) {
+    ref = firebase.database().ref('Drawings/' + tag_drawing)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Drawings/' + tag_drawing + '/score_list/' + next.toString()).set(score)
+    });
+    
+    ref = firebase.database().ref('Descriptions/' + tag_description)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Descriptions/' + tag_description + '/score_list/' + next.toString()).set(score)
+    });
+  }
+
+  async function getDescription(id){
+    ref = firebase.database().ref('Descriptions/' + id)
+    const snapshot =  await ref.once('value');
+    description = snapshot.val()["description"]
+
+    return {"description": description}
+  }
+
+  // Getting random image
+  window.onload = async function() {
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    writer_id = unescape(temp[1]);
+
+    const description_info = await getDescription(writer_id)
+
+    //when the document is finished loading, replace everything
+    //between the <a ...> </a> tags with the value of splitText
+    document.getElementById("text_description").innerHTML=description_info["description"];
+  }
+
+  function submitYes(){
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    writer_id = unescape(temp[1]);
+    temp = parameters[1].split("=");
+    drawer_id = unescape(temp[1]);
+    temp = parameters[2].split("=");
+    rating = unescape(temp[1]);
+
+    updateScores(drawer_id, writer_id, parseInt(rating));
+    window.alert("Rating was successfully uploaded");
+    window.location.href = "juror.html"
+  }
+
+  function submitNo(){
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    writer_id = unescape(temp[1]);
+    temp = parameters[1].split("=");
+    drawer_id = unescape(temp[1]);
+    temp = parameters[2].split("=");
+    rating = unescape(temp[1]);
+
+    // TODO I don't save text for Disqualification reasoning
+
+    updateScores(drawer_id, writer_id, 0);
+    window.alert("Disqualification was noted");
+    window.location.href = "juror.html"
+  }
+
+</script>
+
 <body class="w3-light-grey">
 
 <!-- w3-content defines a container for fixed size centered content, 
@@ -42,23 +138,13 @@ and is wrapped around the whole page content, except for the footer in this exam
 <!-- END Introduction Menu -->
 </div>
 
-<script>
-  var text_description = "text description ... Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sedtellus ut rutrum.";
-
-  window.onload = function() {
-     //when the document is finished loading, replace everything
-     //between the <a ...> </a> tags with the value of splitText
- document.getElementById("text_description ").innerHTML=text_description ;
-} 
-</script>
-
 <!-- Blog entries -->
 <div class="w3-col l4 s12">
 <!-- Image Description Box -->
 <div class="w3-card-4 w3-margin w3-white">
   <div class="w3-container">
       <h3><b>Is this a valid Desciption?</b></h3>
-      <p><a id="text_description "></a></p>
+      <p><a id="text_description"></a></p>
         <h5>If <span class="w3-opacity">No</span> write explanation bellow</h5>
     
 
@@ -71,7 +157,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 
             <div class="w3-row">
             <div class="w3-col m8 s12">
-            <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="juror.html"><b>Yes</b></a></button><button class="w3-button w3-padding-large w3-white w3-border"><a href="juror.html"><b>No</b></a></button></p>
+            <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="submitYes();"><b>Yes</b></button><button class="w3-button w3-padding-large w3-white w3-border" onclick="submitNo();"><b>No</b></button></p>
             </div>
         </div>
         </div>

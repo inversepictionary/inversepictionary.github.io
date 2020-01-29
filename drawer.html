@@ -88,7 +88,6 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       var keys   = Object.keys(obj);
       var lowest = Math.min.apply(null, keys.map(function(x) { return obj[x]["drawer_list"].length} ));
       var match  = keys.filter(function(y) { return obj[y]["drawer_list"].length === lowest });
-      console.log(match)
       rand_description = match[Math.floor(Math.random()*match.length)]
       const snapshot2 =  await firebase.database().ref('Descriptions/' + rand_description).once('value');
       description_text = snapshot2.val()["description"]
@@ -101,7 +100,6 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   // Getting random image
   window.onload = async function() {
     const desc_info = await getRandDescription()
-    console.log(desc_info)
     if(desc_info == undefined){
       window.location.href = "index.html";
     }
