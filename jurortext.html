@@ -127,11 +127,7 @@ and is wrapped around the whole page content, except for the footer in this exam
       <div class="w3-container w3-white">
         <h4><b>Rule Overwiew</b></h4>
         <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
-        <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed
-            tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>    
+        <p>A description is invaild if it uses any descriptive features not explicitly seen in the image or if the description contains any other animal names.</p>    
       </div>
     </div><hr>
   
@@ -145,7 +141,15 @@ and is wrapped around the whole page content, except for the footer in this exam
   <div class="w3-container">
       <h3><b>Is this a valid Desciption?</b></h3>
       <p><a id="text_description"></a></p>
-        <h5>If <span class="w3-opacity">No</span> write explanation bellow</h5>
+      <h5>Mark the following checkboxes which are true of the description above:</h5>
+        <div>
+          <input type="checkbox" name="Q1" value="A1"> The description mentions the name of the animal.<br>
+          <input type="checkbox" name="Q2" value="A2"> The description mentions other animal names in the definition.<br>
+          <input type="checkbox" name="Q3" value="A3"> The description uses descriptive features not explicitly seen in the image.<br>
+          <input type="checkbox" name="Q4" value="A4"> Other<br>
+        </div>
+
+        <h5>If <span class="w3-opacity">Other</span> write explanation bellow:</h5>
     
 
         <div class="w3-container">
@@ -153,6 +157,19 @@ and is wrapped around the whole page content, except for the footer in this exam
             <center>
             <textarea rows="6" cols="43" name="comment" form="usrform"> Enter text here...</textarea>
             </center>
+        </div>
+        <br>
+        <h5>Write bellow things that the user forgot to mention in their description:</h5>
+    
+
+        <div class="w3-container">
+            <br>
+            <center>
+            <textarea rows="6" cols="43" name="comment2" form="usrform"> Enter text here...</textarea>
+            </center>
+        </div>
+
+        <div>
             <p><b>Note:</b> Clicking Yes or No will submit your response</p>
 
             <div class="w3-row">
