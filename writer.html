@@ -125,6 +125,10 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     }
   }
 
+  function onclickHome() {
+    window.location.href = "index.html";
+  }
+
 </script>
 
 <body class="w3-light-grey">
@@ -150,7 +154,8 @@ and is wrapped around the whole page content, except for the footer in this exam
       <div class="w3-container w3-white">
         <h4><b>Rule Overwiew</b></h4>
         <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
-        <p>The object is simple, describe the generated animal image. Refrain from using any descriptive features not explicitly seen in the image. Also your description should not contain your or any other animal names. You will be evaluated on how accurately people can draw the image based on your description. Failure to follow the previously mentioned rules will lead to disqualification. Have fun and Good Luck! </p>    
+        <p>The object is simple, describe the generated animal image. Refrain from using any descriptive features not explicitly seen in the image. Also your description should not contain "<a id="animal_name"></a>" or any other animal names. You will be evaluated on how accurately people can draw the image based on your description. Failure to follow the previously mentioned rules will lead to disqualification. Have fun and Good Luck! </p>    
+        <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="onclickHome();"><b> <- Back </b></button></p>
       </div>
     </div><hr>
   
@@ -163,7 +168,7 @@ and is wrapped around the whole page content, except for the footer in this exam
   <div class="w3-card-4 w3-margin w3-white">
     <img id="animal_image" alt="Animal" style="width:100%">
     <div class="w3-container">
-        <h3><b><a id="animal_name"></a> - ID: <a id="animal_id"></a></b></h3>
+        <h3><b>ID: <a id="animal_id"></a></b></h3>
         <h5>Write your description in the <span class="w3-opacity">textbox</span> bellow</h5>
     
 

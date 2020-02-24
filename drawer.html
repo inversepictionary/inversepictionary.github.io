@@ -33,10 +33,12 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   firebase.analytics();
 
   var db = firebase.database();
+  var strokes = [];
 
-  function sendDrawing(raw_image, description, user_ID, writer_link) {
+  function sendDrawing(raw_image, description, user_ID, writer_link, img_strokes) {
     data = firebase.database().ref('Drawings/').push({
       "raw_image": raw_image,
+      "strokes": img_strokes,
       "description": description,
       "user_ID": user_ID,
       "score_list": {0:0},
@@ -123,12 +125,22 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         window.alert("Canvas cannot be blank");
     }
     else{
-        tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, user_ID, document.getElementById("description_id").innerHTML)
+        tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, user_ID, document.getElementById("description_id").innerHTML, window.strokes)
         updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
         updateDrawingList(document.getElementById("description_id").innerHTML, tag)
         window.alert("Drawing successfully uploaded");
         location.reload();
     }
+  }
+
+  function canvas_clear(){
+      //console.log(window.strokes.length)
+      window.strokes = [];
+      window.ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+  }
+
+  function onclickHome() {
+    window.location.href = "index.html";
   }
 
 </script>
@@ -156,7 +168,8 @@ and is wrapped around the whole page content, except for the footer in this exam
       <div class="w3-container w3-white">
         <h4><b>Rule Overwiew</b></h4>
         <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
-        <p>Draw based on the description. You will be evaluated on how accurately your picture matches the image that was being described.</p>    
+        <p>Draw based on the description. You will be evaluated on how accurately your picture matches the image that was being described.</p> 
+        <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="onclickHome();"><b> <- Back </b></button></p>
       </div>
     </div><hr>
   
@@ -188,8 +201,15 @@ and is wrapped around the whole page content, except for the footer in this exam
                 canvas.height = parseInt(paint_style.getPropertyValue('height'));
                 
                 var mouse = {x: 0, y: 0};
+                var last_mouse = {x: 0, y: 0};
+                var mouse_p = false;
+
+                window.strokes = [];
                 
                 canvas.addEventListener('mousemove', function(e) {
+                    last_mouse.x = mouse.x;
+                    last_mouse.y = mouse.y;
+
                     mouse.x = e.pageX - this.offsetLeft;
                     mouse.y = e.pageY - this.offsetTop;
                 }, false);
@@ -200,6 +220,7 @@ and is wrapped around the whole page content, except for the footer in this exam
                 ctx.strokeStyle = '#000000';
                 
                 canvas.addEventListener('mousedown', function(e) {
+                    mouse_p = true;
                     ctx.beginPath();
                     ctx.moveTo(mouse.x, mouse.y);
                 
@@ -207,20 +228,29 @@ and is wrapped around the whole page content, except for the footer in this exam
                 }, false);
                 
                 canvas.addEventListener('mouseup', function() {
+                    mouse_p = false;
                     canvas.removeEventListener('mousemove', onPaint, false);
+                }, false);
+
+                canvas.addEventListener('mousemove', function(e) {
+                    window.strokes.push([mouse.x - last_mouse.x, mouse.y - last_mouse.y, mouse_p]);
+                    //console.log(window.strokes)
+                    //console.log("***")
                 }, false);
                 
                 var onPaint = function() {
                     ctx.lineTo(mouse.x, mouse.y);
                     ctx.stroke();
                 };
+
           </script>
             
         </div>
 
         <div class="w3-col m8 s12">
+            <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="canvas_clear();"><b>Clear</b></button></p>
             <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="submit();"><b>Submit »</b></button></p>
-            </div>
+        </div>
         </div>
     </div>
   </div>
