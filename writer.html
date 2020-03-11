@@ -98,27 +98,36 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     document.getElementById("word_count").innerHTML = 3;
   }
 
+  function get_text_content(){
+    var i;
+    var txt = "";
+    for (i = 1; i < 16; i++) {
+      txt = txt + " ||| " + document.getElementById("text_content" + String(i)).value
+    }
+    return txt;
+  }
+
   // Updating word count
   function countWords(){
-    s = document.getElementById("text_content").value;
+    s = get_text_content();
     s = s.replace(/(^\s*)|(\s*$)/gi,"");
     s = s.replace(/[ ]{2,}/gi," ");
     s = s.replace(/\n /,"\n");
-    document.getElementById("word_count").innerHTML = s.split(' ').length;
+    document.getElementById("word_count").innerHTML = s.split(' ').length - 15;
   }
 
   user_ID = "ME"
 
   function submit(){
     max_words = 50
-    min_words = 25
+    min_words = 15
     wc = parseInt(document.getElementById("word_count").innerHTML)
     if(wc < min_words ||  wc > max_words){
       window.alert("Word Count should be between " + min_words + "-" + max_words + " words");
     }
     else{
       tag = document.getElementById("animal_id").innerHTML
-      sendDescription(tag, document.getElementById("text_content").value, user_ID)
+      sendDescription(tag, get_text_content(), user_ID)
       updateImageIncrement(tag, "description_count")
       window.alert("Description successfully uploaded");
       location.reload();
@@ -175,7 +184,21 @@ and is wrapped around the whole page content, except for the footer in this exam
         <div class="w3-container">
             <br>
             <center>
-            <textarea id="text_content" rows="6" cols="43" name="comment" form="usrform" onkeyup="countWords();"> Enter text here...</textarea>
+            <textarea id="text_content1" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"> Enter text here...</textarea>
+            <textarea id="text_content2" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content3" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content4" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content5" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content6" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content7" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content8" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content9" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content10" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content11" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content12" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content13" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content14" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
+            <textarea id="text_content15" rows="1" cols="43" name="comment" form="usrform" onkeyup="countWords();"></textarea>
             </center>
             <p><b>Note:</b> The form attribute is not supported in IE.</p>
             

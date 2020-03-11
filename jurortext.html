@@ -48,6 +48,17 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     });
   }
 
+  function updateScoreInfo(tag_drawing, tag_description, info_vec, score) {
+    data = firebase.database().ref('Judging/').push({
+      "tag_drawing": tag_drawing,
+      "tag_description": tag_description,
+      "info_vec": info_vec,
+      "score": score
+    });
+
+    return data.key
+  }
+
   async function getDescription(id){
     ref = firebase.database().ref('Descriptions/' + id)
     const snapshot =  await ref.once('value');
@@ -92,7 +103,9 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     temp = parameters[2].split("=");
     rating = unescape(temp[1]);
 
-    // TODO I don't save text for what was missing
+    bin_vec =  String(Number(document.getElementById("Q1").checked)) + String(Number(document.getElementById("Q2").checked)) + String(Number(document.getElementById("Q3").checked)) + String(Number(document.getElementById("Q4").checked))
+    info_vec = "||| " + bin_vec + " ||| " + document.getElementById("comment").value + " ||| " + document.getElementById("comment2").value
+    updateScoreInfo(drawer_id, writer_id, info_vec, parseInt(rating));
 
     updateScores(drawer_id, writer_id, parseInt(rating));
     window.alert("Rating was successfully uploaded");
@@ -109,8 +122,9 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     temp = parameters[2].split("=");
     rating = unescape(temp[1]);
 
-    // TODO I don't save text for Disqualification reasoning
-    // TODO I don't save text for what was missing
+    bin_vec =  String(Number(document.getElementById("Q1").checked)) + String(Number(document.getElementById("Q2").checked)) + String(Number(document.getElementById("Q3").checked)) + String(Number(document.getElementById("Q4").checked))
+    info_vec = "||| " + bin_vec + " ||| " + document.getElementById("comment").value + " ||| " + document.getElementById("comment2").value
+    updateScoreInfo(drawer_id, writer_id, info_vec, 0);
 
     updateScores(drawer_id, writer_id, 0);
     window.alert("Disqualification was noted");
@@ -159,10 +173,10 @@ and is wrapped around the whole page content, except for the footer in this exam
       <img id="animal_image" alt="Animal" style="width:100%">
       <h5>Mark the following checkboxes which are true of the description above:</h5>
         <div>
-          <input type="checkbox" name="Q1" value="A1"> The description mentions the name of the animal.<br>
-          <input type="checkbox" name="Q2" value="A2"> The description mentions other animal names in the definition.<br>
-          <input type="checkbox" name="Q3" value="A3"> The description uses descriptive features not explicitly seen in the image.<br>
-          <input type="checkbox" name="Q4" value="A4"> Other<br>
+          <input type="checkbox" id="Q1" value="A1"> The description mentions the name of the animal.<br>
+          <input type="checkbox" id="Q2" value="A2"> The description mentions other animal names in the definition.<br>
+          <input type="checkbox" id="Q3" value="A3"> The description uses descriptive features not explicitly seen in the image.<br>
+          <input type="checkbox" id="Q4" value="A4"> Other<br>
         </div>
 
         <h5>If <span class="w3-opacity">Other</span> write explanation bellow:</h5>
@@ -171,7 +185,7 @@ and is wrapped around the whole page content, except for the footer in this exam
         <div class="w3-container">
             <br>
             <center>
-            <textarea rows="6" cols="43" name="comment" form="usrform"> Enter text here...</textarea>
+            <textarea rows="6" cols="43" id="comment" form="usrform"> Enter text here...</textarea>
             </center>
         </div>
         <br>
@@ -181,7 +195,7 @@ and is wrapped around the whole page content, except for the footer in this exam
         <div class="w3-container">
             <br>
             <center>
-            <textarea rows="6" cols="43" name="comment2" form="usrform"> Enter text here...</textarea>
+            <textarea rows="6" cols="43" id="comment2" form="usrform"> Enter text here...</textarea>
             </center>
         </div>
 
