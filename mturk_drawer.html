@@ -7,7 +7,7 @@
         -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-        <script src="mturk_writer.js"></script>
+        <script src="mturk_drawer.js"></script>
     </head>
     <body>
 
@@ -24,7 +24,7 @@
                 
                 you will describe pictures others will draw and draw pictures others have described.  <br>
                 
-                This is the Describe Task: Describe an image sampled from our database <br>
+                This is the Draw Task: Draw an image descriped by another participant <br>
             
                 <b>Note:</b><br>
                 - DO NOT draw a picture of your own description <br>
@@ -52,7 +52,7 @@
             <h1><center> Instructions </center></h1>
             
             <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;"> 
-                The object is simple, you will be given 15 textboxes to describe features of the generated animal image. You will be evaluated on how accurately people can draw the image based on your description. Refrain from using any descriptive features not explicitly seen in the image. Also, your description should not contain the animals name or any other animal names. Lastly, DO NOT use unnessary verbage (ex. "the animal has <i>pointed-ears</i>", "it has a </i>bushy tail</i>", "this picture contains <i>brown fur</i>", etc.) instead <u>ONLY write the attribute</u> (ex. pointed-ears, bushy tail, brown fur, etc.). Failure to follow the previously mentioned rules will lead to disqualification. Have fun and Good Luck! 
+                The object is simple, you will be given a canvas to draw a picture based on a description. You will be evaluated on how accurately your picture matches the image that was being described. If you make a mistake, don't fret, clicking the <i>Clear</i> button will clear the canvas so you can try again. Lastly, most of these descriptions will be a list of attributes seperated by |||. In these cases simply draw the animal based on the list of features. Have fun and Good Luck! 
             </h3>
 
             <br>
@@ -65,21 +65,21 @@
 
             <!-- Q1 -->
             <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;">
-                What is the max number of features you can write? 
+                What is used to seperate features of the description? 
             </h3>
             <div style="display: flex;
               align-items: center;
               justify-content: center;">
                 <form action="">
-                  <input type="radio" name="gridsize" value="10"> 10<br>
-                  <input type="radio" name="gridsize" value="15"> 15<br>
-                  <input type="radio" name="gridsize" value="Unlimited"> Unlimited<br>
+                  <input type="radio" name="gridsize" value="10"> ,<br>
+                  <input type="radio" name="gridsize" value="15"> |||<br>
+                  <input type="radio" name="gridsize" value="Unlimited"> ;;<br>
                 </form>
             </div>
 
             <!-- Q2 -->
             <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;">
-                Is a this a good feature to write in the textbox: "this animal has a bush tail"?
+                I will be evaluated on how fast I can draw the animal.
             </h3>
             <div style="display: flex;
               align-items: center;
@@ -98,9 +98,9 @@
               align-items: center;
               justify-content: center;">
                 <form action="">
-                  <input type="radio" name="exptask" value="fastest"> Type 15 descriptions as fast as possible so others will have a hard time guessing <br>
-                  <input type="radio" name="exptask" value="other"> Put a highly detailed description of the animal image with multiple attributes in a single textbox <br>
-                  <input type="radio" name="exptask" value="fewest"> Write simple well-chosen attributes in each textbox (1 in each) so other people can draw your image correctly <br>
+                  <input type="radio" name="exptask" value="fastest"> Draw an image as fast as possible based on the features listed. <br>
+                  <input type="radio" name="exptask" value="other"> Make a highly detailed portrait of the animal being described based on your intution of what the animal is. <br>
+                  <input type="radio" name="exptask" value="fewest"> Sketch an image on the canvas containg the features listed to resemble the picture they were describing. <br>
                 </form>
             </div>
 

@@ -1,8 +1,8 @@
 
 var user_id = Math.random().toString().slice(2,8);
 
-var trial_string = `https://inversepictionary.github.io/mt_writer.html?trial_id=0&user_id=${user_id}`;
-var practice_string = `https://inversepictionary.github.io/mt_writer.html?trial_id=0&user_id=${user_id}`;
+var trial_string = `https://inversepictionary.github.io/mt_drawer.html?trial_id=0&user_id=${user_id}`;
+var practice_string = `https://inversepictionary.github.io/mt_drawer.html?trial_id=0&user_id=${user_id}`;
 
 $(document).ready(function(){
     $("#start").attr('href', trial_string);
