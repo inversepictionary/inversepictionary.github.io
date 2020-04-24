@@ -138,11 +138,12 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       //updateImageIncrement(tag, "description_count")
       //window.alert("Description successfully uploaded");
 
-      if(tid.toString() == "10"){
+      if(tid.toString() == "5"){
         window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;
       }
-
-      window.location = `https://inversepictionary.github.io/mt_writer.html?trial_id=${tid.toString()}&user_id=${uid}`;
+      else{
+        window.location = `https://inversepictionary.github.io/mt_writer.html?trial_id=${tid.toString()}&user_id=${uid}`;
+      }
       //location.reload();
       //location.reload();
     }

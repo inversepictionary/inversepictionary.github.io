@@ -137,11 +137,13 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         //updateDrawingList(document.getElementById("description_id").innerHTML, tag)
         //window.alert("Drawing successfully uploaded");
 
-        if(tid.toString() == "10"){
+        if(tid.toString() == "5"){
           window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;
         }
+        else{
+          window.location = `https://inversepictionary.github.io/mt_drawer.html?trial_id=${tid.toString()}&user_id=${uid}`;
+        }
 
-        window.location = `https://inversepictionary.github.io/mt_drawer.html?trial_id=${tid.toString()}&user_id=${uid}`;
         //location.reload();
     }
   }
