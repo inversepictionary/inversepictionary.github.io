@@ -112,8 +112,6 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     document.getElementById("image_id").innerHTML=desc_info["image_id"];
   }
 
-  user_ID = "ME"
-
   function isCanvasBlank(canvas) {
         return !canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
     }
@@ -132,10 +130,10 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         var uid = url.searchParams.get("user_id");
         console.log(uid)
 
-        //tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, uid, document.getElementById("description_id").innerHTML, window.strokes)
-        //updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
-        //updateDrawingList(document.getElementById("description_id").innerHTML, tag)
-        //window.alert("Drawing successfully uploaded");
+        tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, uid, document.getElementById("description_id").innerHTML, window.strokes)
+        updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
+        updateDrawingList(document.getElementById("description_id").innerHTML, tag)
+        window.alert("Drawing successfully uploaded");
 
         if(tid.toString() == "5"){
           window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;

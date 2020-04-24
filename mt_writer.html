@@ -116,8 +116,6 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     document.getElementById("word_count").innerHTML = s.split(' ').length - 15;
   }
 
-  user_ID = "ME"
-
   function submit(){
     max_words = 50
     min_words = 15
@@ -134,9 +132,9 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       console.log(uid)
 
       tag = document.getElementById("animal_id").innerHTML
-      //sendDescription(tag, get_text_content(), uid)
-      //updateImageIncrement(tag, "description_count")
-      //window.alert("Description successfully uploaded");
+      sendDescription(tag, get_text_content(), uid)
+      updateImageIncrement(tag, "description_count")
+      window.alert("Description successfully uploaded");
 
       if(tid.toString() == "5"){
         window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;
