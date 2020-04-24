@@ -1,5 +1,5 @@
 
-var user_id = Math.random().toString().slice(2,8);
+var user_id = Math.random().toString().slice(2,10);
 
 var trial_string = `https://inversepictionary.github.io/mt_drawer.html?trial_id=0&user_id=${user_id}`;
 var practice_string = `https://inversepictionary.github.io/mt_drawer.html?trial_id=0&user_id=${user_id}`;

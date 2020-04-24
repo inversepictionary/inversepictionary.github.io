@@ -126,11 +126,25 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       window.alert("Word Count should be between " + min_words + "-" + max_words + " words");
     }
     else{
+      var url_string = window.location.href
+      var url = new URL(url_string);
+      var tid = parseInt(url.searchParams.get("trial_id")) + 1;
+      console.log(tid)
+      var uid = url.searchParams.get("user_id");
+      console.log(uid)
+
       tag = document.getElementById("animal_id").innerHTML
-      sendDescription(tag, get_text_content(), user_ID)
-      updateImageIncrement(tag, "description_count")
-      window.alert("Description successfully uploaded");
-      location.reload();
+      //sendDescription(tag, get_text_content(), uid)
+      //updateImageIncrement(tag, "description_count")
+      //window.alert("Description successfully uploaded");
+
+      if(tid == 10){
+        window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;
+      }
+
+      window.location = `https://inversepictionary.github.io/mt_writer.html?trial_id=${tid.toString()}&user_id=${uid}`;
+      //location.reload();
+      //location.reload();
     }
   }
 
