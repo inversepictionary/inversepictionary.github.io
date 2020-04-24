@@ -125,18 +125,19 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         window.alert("Canvas cannot be blank");
     }
     else{
-        tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, user_ID, document.getElementById("description_id").innerHTML, window.strokes)
-        updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
-        updateDrawingList(document.getElementById("description_id").innerHTML, tag)
-        window.alert("Drawing successfully uploaded");
         var url_string = window.location.href
         var url = new URL(url_string);
-        var c = url.searchParams.get("trial_id");
-        console.log(c);
-        c = url.searchParams.get("user_id");
-        console.log(c);
+        var tid = parseInt(url.searchParams.get("trial_id")) + 1;
+        console.log(tid)
+        var uid = url.searchParams.get("user_id");
+        console.log(uid)
 
-        //window.location = `https://inversepictionary.github.io/mt_drawer.html?trial_id=0&user_id=${user_id}`;
+        //tag = sendDrawing(canvas.toDataURL(), document.getElementById("description_text").innerHTML, uid, document.getElementById("description_id").innerHTML, window.strokes)
+        //updateImageIncrement(document.getElementById("image_id").innerHTML, "drawing_count")
+        //updateDrawingList(document.getElementById("description_id").innerHTML, tag)
+        //window.alert("Drawing successfully uploaded");
+
+        window.location = `https://inversepictionary.github.io/mt_drawer.html?trial_id=${tid.toString()}&user_id=${uid}`;
         //location.reload();
     }
   }
