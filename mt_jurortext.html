@@ -142,7 +142,20 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
     updateScores(drawer_id, writer_id, 0);
     window.alert("Disqualification was noted");
-    window.location.href = "juror.html"
+    
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    var tid = parseInt(url.searchParams.get("trial_id")) + 1;
+    console.log(tid)
+    var uid = url.searchParams.get("user_id");
+    console.log(uid)
+
+    if(tid.toString() == "5"){
+      window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;
+    }
+    else{
+      window.location = `https://inversepictionary.github.io/mt_juror.html?trial_id=${tid.toString()}&user_id=${uid}`;
+    }
   }
 
 </script>
