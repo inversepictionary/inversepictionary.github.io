@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<title>Inverse Pictionary</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBHChQmjKz49_YfQ1P8L9G2BJaBQ98AGpY",
+    authDomain: "inversepictionary.firebaseapp.com",
+    databaseURL: "https://inversepictionary.firebaseio.com",
+    projectId: "inversepictionary",
+    storageBucket: "inversepictionary.appspot.com",
+    messagingSenderId: "1019811222453",
+    appId: "1:1019811222453:web:ddad05cd4d72b5a1673ffc",
+    measurementId: "G-LDQH297677"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  var db = firebase.database();
+
+  function updateScores(tag_drawing, tag_description, score) {
+    ref = firebase.database().ref('Drawings/' + tag_drawing)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Drawings/' + tag_drawing + '/score_list/' + next.toString()).set(score)
+    });
+    
+    ref = firebase.database().ref('Descriptions/' + tag_description)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Descriptions/' + tag_description + '/score_list/' + next.toString()).set(score)
+    });
+  }
+
+  function updateScoreInfo(tag_drawing, tag_description, info_vec, score) {
+    data = firebase.database().ref('Judging/').push({
+      "tag_drawing": tag_drawing,
+      "tag_description": tag_description,
+      "info_vec": info_vec,
+      "score": score
+    });
+
+    return data.key
+  }
+
+  async function getDescription(id){
+    ref = firebase.database().ref('Descriptions/' + id)
+    const snapshot =  await ref.once('value');
+    description = snapshot.val()["description"]
+    image_id = snapshot.val()["image_ID"]
+
+    return {"description": description, "image_ID": image_id}
+  }
+
+  async function getImage(id){
+    const snapshot2 =  await firebase.database().ref('Images/' + id).once('value');
+    name = snapshot2.val()["animal_name"]
+    link = snapshot2.val()["link"]
+
+    return {"id": id, "name": name, "link": link}
+  }
+
+  // Getting random image
+  window.onload = async function() {
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    writer_id = unescape(temp[1]);
+
+    const description_info = await getDescription(writer_id)
+
+    const image_info = await getImage(description_info["image_ID"])
+
+    //when the document is finished loading, replace everything
+    //between the <a ...> </a> tags with the value of splitText
+    document.getElementById("text_description").innerHTML=description_info["description"];
+    document.getElementById("animal_image").src=image_info["link"];
+  }
+
+  function submitYes(){
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    writer_id = unescape(temp[1]);
+    temp = parameters[1].split("=");
+    drawer_id = unescape(temp[1]);
+    temp = parameters[2].split("=");
+    rating = unescape(temp[1]);
+
+    bin_vec =  String(Number(document.getElementById("Q1").checked)) + String(Number(document.getElementById("Q2").checked)) + String(Number(document.getElementById("Q3").checked)) + String(Number(document.getElementById("Q4").checked))
+    info_vec = "||| " + bin_vec + " ||| " + document.getElementById("comment").value + " ||| " + document.getElementById("comment2").value
+    updateScoreInfo(drawer_id, writer_id, info_vec, parseInt(rating));
+
+    updateScores(drawer_id, writer_id, parseInt(rating));
+    window.alert("Rating was successfully uploaded");
+
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    var tid = parseInt(url.searchParams.get("trial_id")) + 1;
+    console.log(tid)
+    var uid = url.searchParams.get("user_id");
+    console.log(uid)
+
+    if(tid.toString() == "5"){
+      window.location = `https://inversepictionary.github.io/mt_code.html?trial_id=${tid.toString()}&user_id=${uid}`;
+    }
+    else{
+      window.location = `https://inversepictionary.github.io/mt_juror.html?trial_id=${tid.toString()}&user_id=${uid}`;
+    }
+    
+  }
+
+  function submitNo(){
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    writer_id = unescape(temp[1]);
+    temp = parameters[1].split("=");
+    drawer_id = unescape(temp[1]);
+    temp = parameters[2].split("=");
+    rating = unescape(temp[1]);
+
+    bin_vec =  String(Number(document.getElementById("Q1").checked)) + String(Number(document.getElementById("Q2").checked)) + String(Number(document.getElementById("Q3").checked)) + String(Number(document.getElementById("Q4").checked))
+    info_vec = "||| " + bin_vec + " ||| " + document.getElementById("comment").value + " ||| " + document.getElementById("comment2").value
+    updateScoreInfo(drawer_id, writer_id, info_vec, 0);
+
+    updateScores(drawer_id, writer_id, 0);
+    window.alert("Disqualification was noted");
+    window.location.href = "juror.html"
+  }
+
+</script>
+
+<body class="w3-light-grey">
+
+<!-- w3-content defines a container for fixed size centered content, 
+and is wrapped around the whole page content, except for the footer in this example -->
+<div class="w3-content" style="max-width:1400px">
+
+    
+<!-- Grid -->
+<div class="w3-row">
+
+<!-- Rule Overview -->
+<div class="w3-col l8">
+    <!-- Header -->
+    <header class="w3-container w3-center w3-padding-32"> 
+        <h1><b>Inverse Pictionary - Juror</b></h1>
+        <p>Welcome to <span class="w3-tag">Version 2.1.0</span></p>
+    </header>
+
+    <!-- Requirements -->
+    <div class="w3-card w3-margin w3-margin-top">
+      <div class="w3-container w3-white">
+        <h4><b>Rule Overwiew</b></h4>
+        <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
+        <p>A description is invaild if it uses any descriptive features not explicitly seen in the image or if the description contains any other animal names.</p>    
+      </div>
+    </div><hr>
+  
+<!-- END Introduction Menu -->
+</div>
+
+<!-- Blog entries -->
+<div class="w3-col l4 s12">
+<!-- Image Description Box -->
+<div class="w3-card-4 w3-margin w3-white">
+  <div class="w3-container">
+      <h3><b>Is this a valid Desciption?</b></h3>
+      <p>Description: "<i id="text_description"></i>"</p>
+      <img id="animal_image" alt="Animal" style="width:100%">
+      <h5>Mark the following checkboxes which are true of the description above:</h5>
+        <div>
+          <input type="checkbox" id="Q1" value="A1"> The description mentions the name of the animal.<br>
+          <input type="checkbox" id="Q2" value="A2"> The description mentions other animal names in the definition.<br>
+          <input type="checkbox" id="Q3" value="A3"> The description uses descriptive features not explicitly seen in the image.<br>
+          <input type="checkbox" id="Q4" value="A4"> Other<br>
+        </div>
+
+        <h5>If <span class="w3-opacity">Other</span> write explanation bellow:</h5>
+    
+
+        <div class="w3-container">
+            <br>
+            <center>
+            <textarea rows="6" cols="43" id="comment" form="usrform"> Enter text here...</textarea>
+            </center>
+        </div>
+        <br>
+        <h5>Write bellow things that the user forgot to mention in their description:</h5>
+    
+
+        <div class="w3-container">
+            <br>
+            <center>
+            <textarea rows="6" cols="43" id="comment2" form="usrform"> Enter text here...</textarea>
+            </center>
+        </div>
+
+        <div>
+            <p><b>Note:</b> Clicking Yes or No will submit your response</p>
+            <p>Was this a valid Desciption?</p>
+
+            <div class="w3-row">
+            <div class="w3-col m8 s12">
+            <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="submitYes();"><b>Yes</b></button><button class="w3-button w3-padding-large w3-white w3-border" onclick="submitNo();"><b>No</b></button></p>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+  <hr>
+<!-- END BLOG ENTRIES -->
+</div>
+
+<!-- END GRID -->
+</div><br>
+
+<!-- END w3-content -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Experiment</title>
+        <!--
+        <link rel="stylesheet" href="index.css">
+        -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <script src="mturk_juror.js"></script>
+    </head>
+    <body>
+
+        <div id="page1" style="display:unset;">
+            <div>
+                <h1><center> Welcome to InversePictionary! </center></h1>
+
+                <h3><center> IMPORTANT! This study can ONLY run on a desktop/laptop </center><h3>
+
+                <p style="margin-left: 20%; margin-right : 20%; text-align: center; line-height: 2.0; "> 
+                In this study you will be playing an online game like pictionary but inverted.  <br>
+                
+                Instead of drawing a picture which others will guess,  <br>
+                
+                you will describe pictures others will draw and draw pictures others have described.  <br>
+                
+                This is the Judge Task: Judge an image and description pair collected from other users <br>
+            
+                <b>Note:</b><br>
+                - DO NOT draw a picture of your own description <br>
+                - DO NOT judge your own description or drawing <br>
+                (In these cases refreshing the page will genrate a new task) <br>
+
+                The study is expected to take 5 minutes <br>
+
+                You will describe <b>5</b> images <br>
+
+                Thanks for participating! <br>
+
+                </p>
+                <div style="margin-left: 30%; margin-right : 30%; text-align: justify; font-size: small;">
+                Informed Consent
+                By answering the following questions, you are participating in a study performed by computer scientists in the MIT Computer Science and Artificial Intelligence Laboratory. If you have questions about this research, please contact Willie McClinton at wbm3@mit.edu. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal identifying information about you. By clicking 'I AGREE' you indicate your consent to participate in this study.
+                </div>
+            </div>
+            <div style="margin-left: 20%; margin-right : 20%;   display: flex;
+                  align-items: center;
+                  justify-content: center;">
+                <button id="agree" style="font-size: 20px;">I AGREE </button>
+            </div>
+        </div>
+
+        <div id="task_description" style="display:none">
+            <h1><center> Instructions </center></h1>
+            
+            <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;"> 
+                Firstly, you will evaluate the image-description pair based on how accurately the drawing reflects the actual image. Judge then based on similarity of visual characteristics (i.e. physical features and environment). This will be on a 5 point scale, where 5 means most similar and 1 means not similar at all. Secondly, you will evaluate the validity of the description. A description is invaild if it uses any descriptive features not explicitly seen in the image or if the description contains any other animal names. Have fun and Good Luck! 
+            </h3>
+
+            <br>
+            <br>
+
+            <!-- QUIZ SECTION -->
+            <h2 style="margin-left: 20%; margin-right : 20%; text-align: center;"> 
+                Quiz 
+            </h2>
+
+            <!-- Q1 -->
+            <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;">
+                What is the highest rating you can give a image description pair? 
+            </h3>
+            <div style="display: flex;
+              align-items: center;
+              justify-content: center;">
+                <form action="">
+                  <input type="radio" name="gridsize" value="10"> 10<br>
+                  <input type="radio" name="gridsize" value="15"> 5<br>
+                  <input type="radio" name="gridsize" value="Unlimited"> Unlimited<br>
+                </form>
+            </div>
+
+            <!-- Q2 -->
+            <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;">
+                Should you judge the pair based only on how well the image is drawn?
+            </h3>
+            <div style="display: flex;
+              align-items: center;
+              justify-content: center;">
+                <form action="">
+                  <input type="radio" name="nnocolor" value="0"> yes<br>
+                  <input type="radio" name="nnocolor" value="1"> no<br>
+                </form>
+            </div>
+
+            <!-- Q3 -->
+            <h3 style="margin-left: 20%; margin-right : 20%; text-align: center;">
+                What's the the goal of this experiment? 
+            </h3>
+            <div style="display: flex;
+              align-items: center;
+              justify-content: center;">
+                <form action="">
+                  <input type="radio" name="exptask" value="fastest"> Judge as many pairs and decriptions as possible as fast as possible <br>
+                  <input type="radio" name="exptask" value="other"> Rate drawings based on how well they were drawn, regardless of how well it matches the description <br>
+                  <input type="radio" name="exptask" value="fewest"> Score images pairs based on how well they match the visual features of the description then validate the description. <br>
+                </form>
+            </div>
+
+            <br>
+            <br>
+
+            <div style="margin-left: 20%; margin-right : 20%;   display: flex;
+                  align-items: center;
+                  justify-content: center;">
+                <button id="check_answer" style="font-size: 20px;">Check Answers and Start Trial</button>
+            </div>
+
+        </div>
+
+        <!--
+        <div>
+            <a style="margin-left: 20%; margin-right : 20%; text-align: justify;" id="start">S T A R T</a>
+        </div>
+        -->
+    </body>
+</html>

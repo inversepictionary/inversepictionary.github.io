@@ -1,0 +1,29 @@
+- Description
+    - unique id
+        - description
+        - drawer_list
+            - array
+        - image_ID
+        - score_list
+            - array
+        - user_ID
+
+- Drawings
+    - unique id
+        - description
+        - raw_image
+        - score_list
+            - array
+        - strokes
+            - array
+        - user_ID
+        - writer_link
+
+- Images
+    - array
+    
+- Judging
+    - info_vec
+    - score
+    - tag_description
+    - tag_drawing

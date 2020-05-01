@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<title>Inverse Pictionary</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+</style>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBHChQmjKz49_YfQ1P8L9G2BJaBQ98AGpY",
+    authDomain: "inversepictionary.firebaseapp.com",
+    databaseURL: "https://inversepictionary.firebaseio.com",
+    projectId: "inversepictionary",
+    storageBucket: "inversepictionary.appspot.com",
+    messagingSenderId: "1019811222453",
+    appId: "1:1019811222453:web:ddad05cd4d72b5a1673ffc",
+    measurementId: "G-LDQH297677"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  var db = firebase.database();
+
+  function updateScores(tag_drawing, tag_description, score) {
+    ref = firebase.database().ref('Drawings/' + tag_drawing)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Drawings/' + tag_drawing + '/score_list/' + next.toString()).set(score)
+    });
+    
+    ref = firebase.database().ref('Descriptions/' + tag_description)
+    ref.once("value", function(snapshot) {
+      next = snapshot.val()["score_list"].length
+      firebase.database().ref('Descriptions/' + tag_description + '/score_list/' + next.toString()).set(score)
+    });
+  }
+
+  async function getRandDrawing(){
+
+    ref = firebase.database().ref('Drawings/')
+    const snapshot =  await ref.once('value');
+    var obj = snapshot.val()
+    var keys   = Object.keys(obj);
+    var lowest = Math.min.apply(null, keys.map(function(x) { return obj[x]["score_list"].length} ));
+    var match  = keys.filter(function(y) { return obj[y]["score_list"].length === lowest });
+    console.log(match)
+    rand_drawing = match[Math.floor(Math.random()*match.length)]
+    const snapshot2 =  await firebase.database().ref('Drawings/' + rand_drawing).once('value');
+    raw_drawing = snapshot2.val()["raw_image"]
+    writer_link = snapshot2.val()["writer_link"]
+    const snapshot3 =  await firebase.database().ref('Descriptions/' + writer_link).once('value');
+    image_id = snapshot3.val()["image_ID"]
+    const snapshot4 =  await firebase.database().ref('Images/' + image_id).once('value');
+    image_link = snapshot4.val()["link"]
+    animal_name = snapshot4.val()["animal_name"]
+
+    return {"drawer_id": rand_drawing, "raw_drawing": raw_drawing, "writer_id": writer_link, "image_link": image_link, "animal_name": animal_name}
+  }
+
+  // Getting random image
+  window.onload = async function() {
+    const drawing_info = await getRandDrawing()
+    console.log(drawing_info)
+
+    //when the document is finished loading, replace everything
+    //between the <a ...> </a> tags with the value of splitText
+    document.getElementById("drawer_id").innerHTML=drawing_info["drawer_id"];
+    document.getElementById("writer_id").innerHTML=drawing_info["writer_id"];
+    document.getElementById("animal_name").innerHTML=drawing_info["animal_name"];
+    document.getElementById("animal_drawing").src=drawing_info["raw_drawing"];
+    document.getElementById("animal_image").src=drawing_info["image_link"];
+  }
+
+  function submit(){
+    // Check if drawing isn't empty
+    rating = document.getElementById("rating_count").innerHTML
+    console.log(rating)
+    if(rating == 0){
+        window.alert("Rate the drawing.");
+    }
+    else{
+        wid = document.getElementById("writer_id").innerHTML
+        did = document.getElementById("drawer_id").innerHTML
+
+      var url_string = window.location.href
+      var url = new URL(url_string);
+      var tid = parseInt(url.searchParams.get("trial_id")) + 1;
+      console.log(tid)
+      var uid = url.searchParams.get("user_id");
+      console.log(uid)
+
+      window.location = `https://inversepictionary.github.io/mt_jurortext.html?trial_id=${tid.toString()}&user_id=${uid}&writer_id=${wid}&drawer_id=${did}&rating=${rating}`;
+    }
+  }
+
+  function onclickHome() {
+    window.location.href = "index.html";
+  }
+
+</script>
+
+
+<body class="w3-light-grey">
+
+<!-- w3-content defines a container for fixed size centered content, 
+and is wrapped around the whole page content, except for the footer in this example -->
+<div class="w3-content" style="max-width:1400px">
+
+    
+<!-- Grid -->
+<div class="w3-row">
+
+<!-- Rule Overview -->
+<div class="w3-col l9">
+    <!-- Header -->
+    <header class="w3-container w3-center w3-padding-32"> 
+        <h1><b>Inverse Pictionary - Juror</b></h1>
+        <p>Welcome to <span class="w3-tag">Version 2.1.0</span></p>
+    </header>
+
+    <!-- Requirements -->
+    <div class="w3-card w3-margin w3-margin-top">
+      <div class="w3-container w3-white">
+        <h4><b>Rule Overwiew</b></h4>
+        <h5>Last updated on <span class="w3-opacity">Jan 25, 2020</span></h5>
+        <p>Evaluate based on how accurately the drawing reflects the actual image. Judge based on similarity of visual characteristics (i.e. physical features and environment).</p>    
+        <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="onclickHome();"><b> <- Back </b></button></p>
+      </div>
+    </div><hr>
+  
+<!-- END Introduction Menu -->
+</div>
+
+<!-- Blog entries -->
+<div class="w3-col l3 s12">
+  <!-- Image Description Box -->
+  <div class="w3-card-4 w3-margin w3-white">
+    <img id="animal_image" alt="Animal" style="width:100%">
+    <img id="animal_drawing" alt="Animal" style="width:100%">
+    <div class="w3-container">
+        <h6><b><a id="animal_name"></a></b> - Rate the drawing (1-5):</h6>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="score">
+        </div>
+
+        <div class="w3-col m8 s12">
+            <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="submit();"><b>Submit »</b></button></p>
+            </div>
+            <div class="w3-col m4 w3-hide-small">
+            <p><span class="w3-right"><b>Rating  </b> <span class="w3-tag"><a id="rating_count"></a></span></span></p>
+            <a id="writer_id" style="display:none;"></a>
+            <a id="drawer_id" style="display:none;"></a>
+        </div>
+    </div>
+    </div>
+  <hr>
+<!-- END BLOG ENTRIES -->
+</div>
+
+<script>
+// Updating rating
+  var slider = document.getElementById("score");
+  var output = document.getElementById("rating_count");
+  output.innerHTML = 0;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  }
+  user_ID = "ME"
+</script>
+
+
+<!-- END GRID -->
+</div><br>
+
+<!-- END w3-content -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>
