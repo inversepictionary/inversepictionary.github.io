@@ -132,7 +132,7 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
       var url_string = window.location.href
       var url = new URL(url_string);
-      var tid = parseInt(url.searchParams.get("trial_id")) + 1;
+      var tid = parseInt(url.searchParams.get("trial_id"));
       console.log(tid)
       var uid = url.searchParams.get("user_id");
       console.log(uid)
